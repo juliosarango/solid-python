@@ -18,7 +18,7 @@
 - Interface Segregation Principle (ISP)
 - Dependency Inversion Principle (DIP)
 
-### Single Responsibility Principle (SRP)
+### S - Single Responsibility Principle (SRP)
 
 > Este principio nos dice que una clase debe tener una y solo una razón para cambiar - Robert C. Martin
 - Una clase (o método) debe tener solo una responsabilidad o función.
@@ -36,3 +36,18 @@ Beneficios:
 - Alta complejidad y difícil mantenimiento.
 - Dificultad para realizar pruebas unitarias.
 - Duplicación de código. La responsabilidad no está bien definida.
+
+## Instalación de dependencias con uv
+```
+# Instalación de uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Creación del ambiente virtual
+uv venv
+
+# Activación del ambiente virtual
+source .venv/bin/activate
+
+# Instalación de dependencias
+uv pip install -r pyproject.toml --extra dev
+```
