@@ -37,6 +37,32 @@ Beneficios:
 - Dificultad para realizar pruebas unitarias.
 - Duplicación de código. La responsabilidad no está bien definida.
 
+### 0 - Open-Closed Principle (OCP)
+> El principio de apertura y cierre nos dice que una clase debe ser abierta para su extensión, pero cerrada para su modificación -  Robert C. Martin
+
+- Permitir nuevas funcionalidades sin modificar el código existente. Para lograr esto nos apoyamos en: Interfaces, Abstracciones o polimorfirmos.
+- Cerrado para su modificación significa que evitamos modificar el código existente, probado y validado. Esto promueve el encapsulamiento y la estabilidad del sistema.
+
+Beneficios:
+- Menos errores y actualizaciones más fáciles
+- Implementaciones rápidas en cambios de requisitos
+
+¿Cúando aplicarlo?
+- Cuando existe necesidad de extender funcionalidades sin modificar el código existente.
+- Cambios frecuentes en los requisitoso diseño basado en abstracciones. 
+> En el código por ejemplo se puede implementar este principio al agregar una nueva pasarela de pagos o un nuevo tipo de notificación com mensajes de texto.
+
+
+
+
+
+
+
+
+
+
+
+
 ## Instalación de dependencias con uv
 ```
 # Instalación de uv
