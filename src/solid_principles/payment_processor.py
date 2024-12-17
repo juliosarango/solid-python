@@ -3,8 +3,8 @@ import stripe
 from stripe.error import StripeError
 import os
 from pydantic import BaseModel
-from typing import Optional
-from abc import ABC, abstractmethod
+from typing import Optional, Protocol
+from abc import abstractmethod
 
 from dotenv import load_dotenv
 from dataclasses import dataclass, field
@@ -42,11 +42,27 @@ class PaymentDataValidator:
         if not payment_data.source:
             print("Invalid data: source is required")
             raise ValueError("Invalid data: source is required")
+        
+        if payment_data.amount <= 0:
+            print("Invalid payment data: amount must be positive")
+            raise ValueError("Invalid payment data: amount must be positive")
 
 
-class Notifier():
+class Notifier(Protocol):
+    """
+    Protocol for sending notifications.
+
+    This protocol defines the interface for notifiers. Implementations
+    should provide a method `send_confirmation` that sends a confirmation
+    to the customer.
+    """
     @abstractmethod
     def send_confirmation(self, customer_data: CustomerData):
+        """Send a confirmation notification to the customer.
+
+        :param customer_data: Data about the customer to notify.
+        :type customer_data: CustomerData
+        """
         ...
 
 class EmailNotifier(Notifier):
@@ -63,12 +79,13 @@ class EmailNotifier(Notifier):
         # server.quit()
         print("Email sent to", customer_data.contact_info.email)
 
+@dataclass
 class SMSNotifier(Notifier):
+    sms_gateway: str
     def send_confirmation(self, customer_data: CustomerData):
-        phone_number = customer_data.contact_info.phone
-        sms_gateway = "the custom SMS Gateway"
+        phone_number = customer_data.contact_info.phone        
         print(
-            f"send the sms using {sms_gateway}: SMS sent to {phone_number}: Thank you for your payment."
+            f"send the sms using {self.sms_gateway}: SMS sent to {phone_number}: Thank you for your payment."
         )
 
 @dataclass
@@ -83,9 +100,25 @@ class TransactionLogger:
                     log_file.write(f"{customer_data.name} paid {payment_data.amount}\n")
                     log_file.write(f"Payment status: Failed\n")
 
-class PaymentoProcessor(ABC):
+class PaymentoProcessor(Protocol):
+    """
+    Protocol for processing payments.
+
+    This protocol defines the interface for payment processors. Implementations
+    should provide a method `process_transaction` that takes customer data and payment data,
+    and returns a Stripe Charge object.
+    """
     @abstractmethod
     def process_transaction(self, customer_data, payment_data)->Charge:
+        """Process a payment.
+
+        :param customer_data: Data about the customer making the payment.
+        :type customer_data: CustomerData
+        :param payment_data: Data about the payment to process.
+        :type payment_data: PaymentData
+        :return: A Stripe Charge object representing the processed payment.
+        :rtype: Charge
+        """
         ...
 
             
@@ -102,11 +135,11 @@ class StripePaymentProcessor(PaymentoProcessor):
                 description="Charge for " + customer_data.name,
             )
             print("Payment successful")
+            return charge
         except StripeError as e:
             print("Payment failed:", e)
-            return
+            raise e
         
-        return charge
 @dataclass
 class PaymentService:
     customer_validator = CustomerValidator()
@@ -132,8 +165,9 @@ class PaymentService:
         
 
 if __name__ == "__main__":
-    sms_notifier = SMSNotifier()
-    payment_processor = PaymentService(notifier=sms_notifier)
+    sms_notifier = SMSNotifier(sms_gateway="This is a mock gateway")
+    payment_service = PaymentService(notifier=sms_notifier)
+    payment_service_sms_notifier = PaymentService(notifier=sms_notifier)
 
     customer_data_with_email = CustomerData(
         name= "John Doe",
@@ -144,13 +178,13 @@ if __name__ == "__main__":
         contact_info = ContactInfo(phone= "1234567890"),
     )
 
-    payment_data = PaymentData(amount= 500, source= "tok_diners")
+    payment_data = PaymentData(amount= 500, source= "tok_discover")
 
-    payment_processor.process_transaction(customer_data_with_email, payment_data)
-    payment_processor.process_transaction(customer_data_with_phone, payment_data) 
+    payment_service_sms_notifier.process_transaction(customer_data_with_email, payment_data)
+    payment_service.process_transaction(customer_data_with_phone, payment_data) 
     
     try:
         payment_data = PaymentData(amount= 700, source= "tok_radarBlock")
-        payment_processor.process_transaction(customer_data_with_phone, payment_data)
+        payment_service.process_transaction(customer_data_with_phone, payment_data)
     except Exception as e:
         print(e)

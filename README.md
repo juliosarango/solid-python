@@ -1,4 +1,5 @@
 # PRINCIPIOS SOLID Y PATRONES DE DISEÑO
+![Solid](images/solid.png)
 > Los patrones de diseño son una herramienta para diseñar programas que se pueden entender y mantener fácilmente. Los patrones de diseño son el equivalente a los planos de una ciudad mientras que los principios SOLID las leyes que lo mantienen en orden.
 
 ¿Por qué es importante usarlos?
@@ -52,7 +53,24 @@ Beneficios:
 - Cambios frecuentes en los requisitoso diseño basado en abstracciones. 
 > En el código por ejemplo se puede implementar este principio al agregar una nueva pasarela de pagos o un nuevo tipo de notificación com mensajes de texto.
 
+### L - Liskov Substitution Principle (LSP)
+> Este principio nos dice que una subclase debe ser substituible por su clase base - Barbara Liskov
+Importancia:
+- Evita comportamientos inesperados al usar subclases
+- La razón funfamental de este principio es asegurar la coherencia y correcta ejecución del programa
 
+Características:
+- Las subclases deben respetar el contrado de la clase base. No se deben modificar la firma de los métodos ni incrementar atributos.
+- Mantener la compatibilidad de interfaces y tipos
+- No introduce excepciones inesperadas
+Beneficios:
+- Reutilización de código
+- Mantener la compatibilidad de interfaces y tipos
+- Reducción de errores en tiempo de ejecución ya que se mantiene la consistencia y coherencia a lo largo del sistema
+
+¿Cuando aplicarlo?
+- Cuando existen violaciones de precondiciones o post-condiciones. Cuando necesito agregar parámetros en los métodos o cuando el tipo de dato de retorno de los métodos se cambia.
+- Cuando existen excepciones inesperadas en subclases
 
 
 
