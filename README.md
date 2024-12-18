@@ -38,7 +38,7 @@ Beneficios:
 - Dificultad para realizar pruebas unitarias.
 - Duplicación de código. La responsabilidad no está bien definida.
 
-### 0 - Open-Closed Principle (OCP)
+### O - Open-Closed Principle (OCP)
 > El principio de apertura y cierre nos dice que una clase debe ser abierta para su extensión, pero cerrada para su modificación -  Robert C. Martin
 
 - Permitir nuevas funcionalidades sin modificar el código existente. Para lograr esto nos apoyamos en: Interfaces, Abstracciones o polimorfirmos.
@@ -72,10 +72,19 @@ Beneficios:
 - Cuando existen violaciones de precondiciones o post-condiciones. Cuando necesito agregar parámetros en los métodos o cuando el tipo de dato de retorno de los métodos se cambia.
 - Cuando existen excepciones inesperadas en subclases
 
+### I - Principio de Segregación de Interfaces (ISP)
+> Los clientes no deberías verse obligados a depender de interfaces que no utilizan - Rovert C. Martin
+En otras palabras, es preferible dividir interfaces grandes en interfaces más pequeñas y específicas para que las clases solo tengan que implementar los métodos que realmente necesitan. Una clase no debe verse obligada a implementar todos los métodos aunque no lo necesite.
+Ventajas:
+- Mejora la cohesión y reduce el acoplamiento.
+- Reutilización de componentes
+- Los cambios en una interfaz no afectan a otras clases
+- Facilita la creación de pruebas unitarias. Se puede dividir el contexto sobre el que se ejecutan las pruebas para cada una de las interfaces
 
-
-
-
+¿Cuándo aplicarlo?
+- Cuando un cambio en la interfaz afecta a muchas clases. Este es uno de los principales indicadores de que debemos aplicar este principio. No debe ser dificil modificar un comportamiento
+- Cuando una interfaz tiene demasiados métodos irrelevantes
+- Cuando las clases no implementan todos los métodos de una interfaz
 
 
 
